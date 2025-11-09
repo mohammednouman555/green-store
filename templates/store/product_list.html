@@ -1,0 +1,28 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<h2 style="text-align:center; margin-bottom:20px;">Our Products</h2>
+
+{% if products %}
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap:20px;">
+        {% for product in products %}
+            <div style="border:1px solid #ccc; border-radius:10px; overflow:hidden; background:#fff; box-shadow:0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s;">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:100%; height:200px; object-fit:cover;">
+                {% endif %}
+                <div style="padding:15px;">
+                    <h3 style="margin:0 0 10px 0;">{{ product.name }}</h3>
+                    <p style="font-size:14px; color:#555;">{{ product.description|truncatechars:80 }}</p>
+                    <p style="font-weight:bold; margin:10px 0;">₹{{ product.price }}</p>
+                    <div style="display:flex; gap:10px;">
+                        <a class="btn" href="{% url 'store:add_to_cart' product.id %}">Add to Cart</a>
+                        <a class="btn" href="{% url 'store:product_detail' product.id %}">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p style="text-align:center; font-size:16px;">No products available yet. Add some via admin.</p>
+{% endif %}
+{% endblock %}

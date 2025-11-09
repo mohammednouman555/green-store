@@ -1,0 +1,17 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<h1>Our Eco Products</h1>
+<ul>
+  {% for product in products %}
+    <li>
+      <strong>{{ product.name }}</strong> - ₹{{ product.price }}<br>
+      {{ product.description }}<br>
+      <a href="{% url 'store:add_to_cart' product.id %}">Add to Cart</a>
+    </li>
+  {% empty %}
+    <li>No products available yet. Add some in admin.</li>
+  {% endfor %}
+</ul>
+<a href="{% url 'store:view_cart' %}">Go to Cart</a>
+{% endblock %}
