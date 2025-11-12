@@ -1,0 +1,36 @@
+{% extends 'store/base.html' %}
+{% block content %}
+<h2 style="text-align:center; margin-bottom:20px;">My Orders</h2>
+
+{% if orders %}
+    {% for order in orders %}
+        <div style="border:1px solid #ccc; border-radius:10px; margin-bottom:20px; padding:15px; background:#f9f9f9;">
+            <h3>Order #{{ order.id }}</h3>
+            <p><strong>Date:</strong> {{ order.created_at|date:"d M Y, H:i" }}</p>
+
+            <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+                <tr style="background:#e0f2f1;">
+                    <th style="padding:8px; border:1px solid #ccc;">Product</th>
+                    <th style="padding:8px; border:1px solid #ccc;">Quantity</th>
+                    <th style="padding:8px; border:1px solid #ccc;">Price</th>
+                    <th style="padding:8px; border:1px solid #ccc;">Subtotal</th>
+                </tr>
+                {% for item in order.items.all %}
+                    <tr>
+                        <td style="padding:8px; border:1px solid #ccc;">{{ item.product.name }}</td>
+                        <td style="padding:8px; border:1px solid #ccc;">{{ item.quantity }}</td>
+                        <td style="padding:8px; border:1px solid #ccc;">₹{{ item.product.price|floatformat:2 }}</td>
+                        <td style="padding:8px; border:1px solid #ccc;">₹{{ item.product.price|floatformat:2|add:item.quantity }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+            <p style="margin-top:10px;">
+                <strong>Total:</strong> ₹{{ order.total_amount|floatformat:2 }}
+            </p>
+        </div>
+    {% endfor %}
+{% else %}
+    <p style="text-align:center;">You haven’t placed any orders yet.</p>
+{% endif %}
+{% endblock %}

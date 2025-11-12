@@ -1,8 +1,63 @@
 {% extends 'store/base.html' %}
-
+{% load static %}
 {% block content %}
-<h2 style="text-align:center; margin-bottom:20px;">Our Products</h2>
 
+<!-- 🌿 Hero Section -->
+<section style="
+    background: url('{% static 'images/green-bg.jpg' %}') center/cover no-repeat;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+    text-align: center;
+    border-radius: 10px;
+    margin-bottom: 40px;
+">
+    <h1 style="font-size: 48px; font-weight: bold;">Welcome to Green Store</h1>
+    <p style="font-size: 20px;">Grow Green. Live Clean.</p>
+</section>
+
+<!-- 🔍 Search and Filter Section -->
+<div style="display:flex; justify-content:center; gap:15px; margin-bottom:30px;">
+    <form method="GET" action="{% url 'store:home' %}">
+        <input type="text" name="search" placeholder="Search products..." value="{{ request.GET.search }}"
+               style="padding:10px; width:250px; border:1px solid #ccc; border-radius:6px;">
+        <select name="category" style="padding:10px; border:1px solid #ccc; border-radius:6px;">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>
+                    {{ cat.name }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit" style="padding:10px 15px; background:#4caf50; color:white; border:none; border-radius:6px;">Apply</button>
+    </form>
+</div>
+
+<!-- 💰 Discount Offers Section -->
+<div style="margin: 0 auto; width: 90%; text-align: center; margin-bottom:40px;">
+    <h2 style="margin-bottom: 15px;">Exclusive Offers 🌱</h2>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap:20px;">
+        <div style="background:white; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:15px;">
+            <img src="{% static 'images/offer1.jpg' %}" alt="Offer 1" style="width:100%; border-radius:10px;">
+            <p style="margin-top:10px; font-weight:bold;">50% off on Organic Seeds</p>
+        </div>
+        <div style="background:white; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:15px;">
+            <img src="{% static 'images/offer2.jpg' %}" alt="Offer 2" style="width:100%; border-radius:10px;">
+            <p style="margin-top:10px; font-weight:bold;">30% off on Gardening Tools</p>
+        </div>
+        <div style="background:white; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:15px;">
+            <img src="{% static 'images/offer3.jpg' %}" alt="Offer 3" style="width:100%; border-radius:10px;">
+            <p style="margin-top:10px; font-weight:bold;">20% off on Fertilizers</p>
+        </div>
+    </div>
+</div>
+
+<!-- 🛒 Product Grid Section -->
+<h2 style="text-align:center; margin-bottom:20px;">All Products</h2>
 {% if products %}
     <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap:20px;">
         {% for product in products %}
@@ -13,7 +68,16 @@
                 <div style="padding:15px;">
                     <h3 style="margin:0 0 10px 0;">{{ product.name }}</h3>
                     <p style="font-size:14px; color:#555;">{{ product.description|truncatechars:80 }}</p>
-                    <p style="font-weight:bold; margin:10px 0;">₹{{ product.price }}</p>
+                    {% if product.discount > 0 %}
+    <p style="margin:10px 0;">
+        <span style="text-decoration:line-through; color:#888;">₹{{ product.price }}</span>
+        <span style="color:#2e7d32; font-weight:bold;"> ₹{{ product.discounted_price|floatformat:2 }}</span>
+        <span style="color:red;">(-{{ product.discount }}%)</span>
+    </p>
+{% else %}
+    <p style="font-weight:bold; margin:10px 0;">₹{{ product.price }}</p>
+{% endif %}
+
                     <div style="display:flex; gap:10px;">
                         <a class="btn" href="{% url 'store:add_to_cart' product.id %}">Add to Cart</a>
                         <a class="btn" href="{% url 'store:product_detail' product.id %}">View Details</a>
@@ -23,6 +87,16 @@
         {% endfor %}
     </div>
 {% else %}
-    <p style="text-align:center; font-size:16px;">No products available yet. Add some via admin.</p>
+    <p style="text-align:center; font-size:16px;">No products available yet.</p>
 {% endif %}
+
+<!-- 📦 Order Check Option -->
+{% if user.is_authenticated %}
+<div style="text-align:center; margin-top:40px;">
+    <a href="{% url 'store:view_cart' %}" style="background:#2e7d32; color:white; padding:10px 20px; border-radius:6px; text-decoration:none;">
+        View My Orders
+    </a>
+</div>
+{% endif %}
+
 {% endblock %}

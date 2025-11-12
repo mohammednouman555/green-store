@@ -1,0 +1,15 @@
+{% extends 'store/base.html' %}
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2>Scan to Pay</h2>
+    <p>Scan the QR code below to complete your payment for Order <strong>#{{ order.id }}</strong>.</p>
+
+    <img src="/static/images/dummy_qr.png" alt="QR Code" style="width:200px;height:200px;margin:20px;">
+
+    <p>Once paid, click the button below:</p>
+
+    <a href="{% url 'store:confirm_payment' order.id %}" class="btn btn-success btn-lg">
+        Payment Done
+    </a>
+</div>
+{% endblock %}

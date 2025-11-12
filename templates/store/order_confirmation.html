@@ -1,0 +1,16 @@
+{% extends 'store/base.html' %}
+{% block content %}
+<div style="text-align:center; margin-top:50px;">
+    <h2>🎉 Order Confirmed!</h2>
+    <p>Thank you, {{ user.username }}!</p>
+    <p>Your order <strong>#{{ order.id }}</strong> has been successfully placed.</p>
+    <p><strong>Date:</strong> {{ order.created_at|date:"d M Y, H:i" }}</p>
+    <p><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+
+    <a href="{% url 'store:home' %}"
+       style="display:inline-block; padding:10px 20px; margin-top:20px;
+              background-color:#4CAF50; color:white; border-radius:8px; text-decoration:none;">
+       Continue Shopping
+    </a>
+</div>
+{% endblock %}

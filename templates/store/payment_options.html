@@ -1,0 +1,19 @@
+{% extends 'store/base.html' %}
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2>Choose Payment Method</h2>
+    <p>Your order ID is <strong>#{{ order.id }}</strong></p>
+
+    <div class="mt-4">
+        <!-- Option 1: Pay on Delivery -->
+        <a href="{% url 'store:confirm_cod' order.id %}" class="btn btn-success btn-lg m-2">
+            Pay on Delivery
+        </a>
+
+        <!-- Option 2: Pay Now -->
+        <a href="{% url 'store:pay_now' order.id %}" class="btn btn-primary btn-lg m-2">
+            Pay Now (QR)
+        </a>
+    </div>
+</div>
+{% endblock %}

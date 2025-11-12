@@ -5,19 +5,73 @@
     <meta charset="UTF-8">
     <title>🌿 Green Store</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; background-color:#f4f9f4; color:#333; }
-        header, footer { background:#2a7a2a; color:white; padding:15px 20px; text-align:center; }
-        nav a { margin:0 10px; text-decoration:none; color:#cce5cc; font-weight:bold; }
-        nav a:hover { color:white; }
-        .btn { background:#2a7a2a; color:white; padding:5px 10px; text-decoration:none; border-radius:5px; transition:0.3s; }
-        .btn:hover { background:#1f5c1f; }
-        main { max-width:900px; margin:20px auto; padding:0 15px; }
-        table.cart { width:100%; border-collapse:collapse; margin-top:15px; }
-        table.cart th, table.cart td { border:1px solid #ccc; padding:8px; text-align:center; }
-        table.cart th { background-color:#d9f2d9; }
-        ul.messages { list-style:none; padding:0; margin:10px 0; }
-        ul.messages li { background-color:#d4edda; border:1px solid #c3e6cb; padding:8px; margin-bottom:5px; border-radius:4px; color:#155724; }
-        img { max-width:100%; height:auto; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin:0;
+            background-color:#f4f9f4;
+            color:#333;
+        }
+        header, footer {
+            background:#2a7a2a;
+            color:white;
+            padding:15px 20px;
+            text-align:center;
+        }
+        nav a {
+            margin:0 10px;
+            text-decoration:none;
+            color:#cce5cc;
+            font-weight:bold;
+        }
+        nav a:hover {
+            color:white;
+        }
+        .btn {
+            background:#2a7a2a;
+            color:white;
+            padding:5px 10px;
+            text-decoration:none;
+            border-radius:5px;
+            transition:0.3s;
+        }
+        .btn:hover {
+            background:#1f5c1f;
+        }
+        main {
+            max-width:900px;
+            margin:20px auto;
+            padding:0 15px;
+        }
+        table.cart {
+            width:100%;
+            border-collapse:collapse;
+            margin-top:15px;
+        }
+        table.cart th, table.cart td {
+            border:1px solid #ccc;
+            padding:8px;
+            text-align:center;
+        }
+        table.cart th {
+            background-color:#d9f2d9;
+        }
+        ul.messages {
+            list-style:none;
+            padding:0;
+            margin:10px 0;
+        }
+        ul.messages li {
+            background-color:#d4edda;
+            border:1px solid #c3e6cb;
+            padding:8px;
+            margin-bottom:5px;
+            border-radius:4px;
+            color:#155724;
+        }
+        img {
+            max-width:100%;
+            height:auto;
+        }
     </style>
 </head>
 <body>
@@ -27,8 +81,11 @@
     <nav>
         <a href="{% url 'store:home' %}">Home</a> |
         <a href="{% url 'store:view_cart' %}">🛒 Cart ({{ request.session.cart|length|default:0 }})</a> |
+
         {% if user.is_authenticated %}
-            Hi, {{ user.username }} | <a href="{% url 'store:logout' %}">Logout</a>
+            <a href="{% url 'store:my_orders' %}">📦 My Orders</a> |
+            Hi, {{ user.username }} |
+            <a href="{% url 'store:logout' %}">Logout</a>
         {% else %}
             <a href="{% url 'store:login' %}">Login</a> |
             <a href="{% url 'store:register' %}">Register</a>
