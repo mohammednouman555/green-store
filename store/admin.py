@@ -1,10 +1,11 @@
 from django.contrib import admin
-from .models import Product, Order, OrderItem, Category
+from .models import Product, Order, OrderItem, Category, Review
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name',)
+
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -15,9 +16,25 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'created_at', 'paid']
+    list_display = ('id', 'user', 'created_at', 'paid')
+    list_filter = ('paid', 'created_at')
+    search_fields = ('user__username', 'id')
 
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ['order', 'product', 'quantity']
+    list_display = ('order', 'product', 'quantity')
+
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('product', 'user', 'rating', 'created_at')
+    list_filter = ('rating', 'created_at')
+    search_fields = ('user__username', 'product__name', 'comment')
+
+
+from .models import DeliveryPartner
+
+@admin.register(DeliveryPartner)
+class DeliveryPartnerAdmin(admin.ModelAdmin):
+    list_display = ('user', 'phone', 'status')

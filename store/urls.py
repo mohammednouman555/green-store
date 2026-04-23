@@ -21,6 +21,12 @@ urlpatterns = [
     path('confirm-cod/<int:order_id>/', views.confirm_cod, name='confirm_cod'),
     path('pay-now/<int:order_id>/', views.pay_now, name='pay_now'),
     path('confirm-payment/<int:order_id>/', views.confirm_payment, name='confirm_payment'),
+    path('delete-order/<int:order_id>/', views.delete_order, name='delete_order'),
+    path('delivery-dashboard/', views.delivery_dashboard, name='delivery_dashboard'),
+    path('mark-delivered/<int:order_id>/', views.mark_delivered, name='mark_delivered'),
+
+
+
 
 
 ]

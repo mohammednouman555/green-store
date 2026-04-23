@@ -1,0 +1,22 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<h2>Delivery Dashboard</h2>
+
+{% if orders %}
+    {% for order in orders %}
+        <div style="border:1px solid #ccc; padding:10px; margin-bottom:15px;">
+            <h3>Order #{{ order.id }}</h3>
+            <p>User: {{ order.user.username }}</p>
+            <p>Date: {{ order.created_at }}</p>
+            <p>Status: {{ order.delivery_status }}</p>
+
+            {% if order.delivery_status != "Delivered" %}
+                <a href="{% url 'store:mark_delivered' order.id %}" class="btn">Mark as Delivered</a>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No assigned orders.</p>
+{% endif %}
+{% endblock %}

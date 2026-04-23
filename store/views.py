@@ -30,9 +30,34 @@ def home(request):
 def splash(request):
     return render(request, 'store/splash.html')
 
+from .forms import ReviewForm
+
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    return render(request, 'store/product_detail.html', {'product': product})
+    reviews = product.reviews.all().order_by('-created_at')
+
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                review = form.save(commit=False)
+                review.product = product
+                review.user = request.user
+                review.save()
+                messages.success(request, "Review added successfully!")
+                return redirect('store:product_detail', pk=pk)
+        else:
+            messages.error(request, "You must be logged in to post a review.")
+            return redirect('store:login')
+    else:
+        form = ReviewForm()
+
+    return render(request, 'store/product_detail.html', {
+        'product': product,
+        'reviews': reviews,
+        'form': form
+    })
+
 
 def add_to_cart(request, pk):
     cart = request.session.get('cart', {})
@@ -90,6 +115,19 @@ def checkout(request):
 def my_orders(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'store/my_orders.html', {'orders': orders})
+
+
+@login_required
+def delete_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+
+    # Simply delete the order (no status field exists)
+    order.delete()
+
+    messages.success(request, f"Order #{order_id} has been deleted successfully.")
+    return redirect('store:my_orders')
+
+
 
 
 # Registration (already added)
@@ -154,3 +192,19 @@ def confirm_payment(request, order_id):
     order.status = "Paid and Confirmed"
     order.save()
     return render(request, 'store/order_confirmation.html', {'order': order})
+
+
+@login_required
+def delivery_dashboard(request):
+    partner = DeliveryPartner.objects.get(user=request.user)
+    orders = Order.objects.filter(delivery_partner=partner).order_by('-created_at')
+    return render(request, 'store/delivery_dashboard.html', {'orders': orders})
+
+
+@login_required
+def mark_delivered(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    order.delivery_status = "Delivered"
+    order.save()
+    messages.success(request, f"Order #{order.id} marked as delivered.")
+    return redirect('store:delivery_dashboard')
