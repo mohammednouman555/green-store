@@ -24,3 +24,5 @@ media/
 # System
 .DS_Store
 Thumbs.db
+
+.venv
